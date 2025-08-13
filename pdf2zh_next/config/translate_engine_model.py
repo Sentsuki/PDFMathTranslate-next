@@ -371,7 +371,7 @@ class GeminiSettings(BaseModel):
         return OpenAISettings(
             openai_model=self.gemini_model,
             openai_api_key=self.gemini_api_key,
-            openai_base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
+            openai_base_url="http://litellm:4000/v1",
         )
 
 
@@ -451,7 +451,7 @@ class GrokSettings(BaseModel):
         return OpenAISettings(
             openai_model=self.grok_model,
             openai_api_key=self.grok_api_key,
-            openai_base_url="https://api.x.ai/v1",
+            openai_base_url="http://litellm:4000/v1",
         )
 
 

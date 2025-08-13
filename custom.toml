@@ -1,0 +1,7 @@
+[basic]
+gui = true
+
+[gui_settings]
+enabled_services = "Bing"
+disable_gui_sensitive_input = true
+disable_config_auto_save = true
