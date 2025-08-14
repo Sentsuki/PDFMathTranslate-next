@@ -896,16 +896,8 @@ logo_path = assets_dir / "powered_by_siliconflow_light.png"
 
 tech_details_string = f"""
                     <summary>Technical details</summary>
-                    - ⭐ Star at GitHub: <a href="https://github.com/PDFMathTranslate/PDFMathTranslate-next">PDFMathTranslate/PDFMathTranslate-next</a><br>
-                    - BabelDOC: <a href="https://github.com/funstory-ai/BabelDOC">funstory-ai/BabelDOC</a><br>
-                    - GUI by: <a href="https://github.com/reycn">Rongxin</a> & <a href="https://github.com/hellofinch">hellofinch</a> & <a href="https://github.com/awwaawwa">awwaawwa</a><br>
                     - pdf2zh Version: {__version__} <br>
                     - BabelDOC Version: {babeldoc_version}<br>
-                    - Free translation service provided by <a href="https://siliconflow.cn/" target="_blank" style="text-decoration: none;">SiliconFlow</a><br>
-                    <a href="https://siliconflow.cn/" target="_blank" style="text-decoration: none;">
-                        <img src="/gradio_api/file={logo_path}" alt="Powered By SiliconFlow" style="height: 40px; margin-top: 10px;">
-                    </a>
-                    <br>
                 """
 
 # The following code creates the GUI
@@ -947,7 +939,7 @@ with gr.Blocks(
             gr.Markdown("## Translation Options")
 
             siliconflow_free_acknowledgement = gr.Markdown(
-                "Free translation service provided by [SiliconFlow](https://siliconflow.cn)",
+                "Gemini is recommended",
                 visible=True,
             )
 
