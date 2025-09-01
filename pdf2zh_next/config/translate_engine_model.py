@@ -744,7 +744,7 @@ TRANSLATION_ENGINE_SETTING_TYPE: TypeAlias = (
 NOT_SUPPORTED_TRANSLATION_ENGINE_SETTING_TYPE: TypeAlias = NoneType
 
 # 默认翻译引擎
-_DEFAULT_TRANSLATION_ENGINE = SiliconFlowFreeSettings
+_DEFAULT_TRANSLATION_ENGINE = GoogleSettings
 assert len(_DEFAULT_TRANSLATION_ENGINE.model_fields) == 2, (
     "Default translation engine cannot have detail settings"
 )
