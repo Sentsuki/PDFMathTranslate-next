@@ -143,6 +143,9 @@ class GoogleSettings(BaseModel):
     """Google Translation settings"""
 
     translate_engine_type: Literal["Google"] = Field(default="Google")
+    support_llm: Literal["yes", "no"] = Field(
+        default="no", description="Just for compatibility"
+    )
 
     def validate_settings(self) -> None:
         pass
