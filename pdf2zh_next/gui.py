@@ -1067,7 +1067,7 @@ with gr.Blocks(
         render=False,
     )
     with Translate(translation_file_path.as_posix(), lang_selector):
-        gr.Markdown("# [PDFMathTranslate Next](https://pdf2zh-next.com)")
+        gr.Markdown("# [PDF Translate](https://github.com/Sentsuki/PDFMathTranslate-next)")
 
         translation_engine_arg_inputs = []
         detail_text_inputs = []
@@ -1098,10 +1098,12 @@ with gr.Blocks(
 
                 gr.Markdown(_("## Translation Options"))
 
-            siliconflow_free_acknowledgement = gr.Markdown(
-                "Gemini is recommended",
-                visible=True,
-            )
+                siliconflow_free_acknowledgement = gr.Markdown(
+                    _(
+                        "Gemini is recommended"
+                    ),
+                    visible=True,
+                )
 
                 detail_index = 0
                 with gr.Group() as translation_engine_settings:
