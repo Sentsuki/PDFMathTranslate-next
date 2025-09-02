@@ -13,6 +13,7 @@ from string import Template
 import chardet
 import gradio as gr
 import requests
+import yaml
 from babeldoc import __version__ as babeldoc_version
 from gradio_i18n import Translate
 from gradio_pdf import PDF
@@ -31,6 +32,13 @@ from pdf2zh_next.i18n import LANGUAGES
 from pdf2zh_next.i18n import gettext as _
 
 logger = logging.getLogger(__name__)
+
+
+def get_translation_dic(file_path: Path):
+    with file_path.open(encoding="utf-8", newline="\n") as f:
+        return yaml.safe_load(f)
+
+
 __gui_service_arg_names = []
 # The following variables associate strings with specific languages
 lang_map = {
@@ -1066,7 +1074,7 @@ with gr.Blocks(
         value=settings.gui_settings.ui_lang,
         render=False,
     )
-    with Translate(translation_file_path.as_posix(), lang_selector):
+    with Translate(get_translation_dic(translation_file_path), lang_selector):
         gr.Markdown("# [PDF Translate](https://github.com/Sentsuki/PDFMathTranslate-next)")
 
         translation_engine_arg_inputs = []
