@@ -1,3 +1,4 @@
+import logging
 import re
 import typing
 from dataclasses import dataclass
@@ -12,6 +13,8 @@ from pydantic import Field
 GUI_SENSITIVE_FIELDS = []
 # any field in GUI_PASSWORD_FIELDS will be masked in GUI and treated as password
 GUI_PASSWORD_FIELDS = []
+
+logger = logging.getLogger(__name__)
 
 
 def _clean_string(value: str | None) -> str | None:
@@ -88,6 +91,9 @@ class OpenAISettings(BaseModel):
     openai_reasoning_effort: str | None = Field(
         default=None,
         description="Reasoning effort for OpenAI service (minimal/low/medium/high)",
+    )
+    openai_enable_json_mode: bool | None = Field(
+        default=None, description="Enable JSON mode for OpenAI service"
     )
 
     # This parameter contains a spelling error, but it will not be corrected for compatibility reasons.
@@ -183,6 +189,9 @@ class DeepSeekSettings(BaseModel):
     deepseek_api_key: str | None = Field(
         default=None, description="API key for DeepSeek service"
     )
+    deepseek_enable_json_mode: bool | None = Field(
+        default=None, description="Enable JSON mode for DeepSeek service"
+    )
 
     def validate_settings(self) -> None:
         if not self.deepseek_api_key:
@@ -195,6 +204,7 @@ class DeepSeekSettings(BaseModel):
             openai_model=self.deepseek_model,
             openai_api_key=self.deepseek_api_key,
             openai_base_url="https://api.deepseek.com/v1",
+            openai_enable_json_mode=self.deepseek_enable_json_mode,
         )
 
 
@@ -298,6 +308,9 @@ class ModelScopeSettings(BaseModel):
     modelscope_api_key: str | None = Field(
         default=None, description="API key for ModelScope service"
     )
+    modelscope_enable_json_mode: bool | None = Field(
+        default=None, description="Enable JSON mode for ModelScope service"
+    )
 
     def validate_settings(self) -> None:
         if not self.modelscope_api_key:
@@ -310,6 +323,7 @@ class ModelScopeSettings(BaseModel):
             openai_model=self.modelscope_model,
             openai_api_key=self.modelscope_api_key,
             openai_base_url="https://api-inference.modelscope.cn/v1",
+            openai_enable_json_mode=self.modelscope_enable_json_mode,
         )
 
 
@@ -328,6 +342,9 @@ class ZhipuSettings(BaseModel):
     zhipu_api_key: str | None = Field(
         default=None, description="API key for Zhipu service"
     )
+    zhipu_enable_json_mode: bool | None = Field(
+        default=None, description="Enable JSON mode for Zhipu service"
+    )
 
     def validate_settings(self) -> None:
         if not self.zhipu_api_key:
@@ -340,6 +357,7 @@ class ZhipuSettings(BaseModel):
             openai_model=self.zhipu_model,
             openai_api_key=self.zhipu_api_key,
             openai_base_url="https://open.bigmodel.cn/api/paas/v4",
+            openai_enable_json_mode=self.zhipu_enable_json_mode,
         )
 
 
@@ -436,6 +454,9 @@ class GeminiSettings(BaseModel):
     gemini_api_key: str | None = Field(
         default=None, description="API key for Gemini service"
     )
+    gemini_enable_json_mode: bool | None = Field(
+        default=None, description="Enable JSON mode for Gemini service"
+    )
 
     def validate_settings(self) -> None:
         if not self.gemini_api_key:
@@ -448,6 +469,7 @@ class GeminiSettings(BaseModel):
             openai_model=self.gemini_model,
             openai_api_key=self.gemini_api_key,
             openai_base_url="http://litellm:4000/v1",
+            openai_enable_json_mode=self.gemini_enable_json_mode,
         )
 
 
@@ -524,6 +546,9 @@ class GrokSettings(BaseModel):
     grok_api_key: str | None = Field(
         default=None, description="API key for Grok service"
     )
+    grok_enable_json_mode: bool | None = Field(
+        default=None, description="Enable JSON mode for Grok service"
+    )
 
     def validate_settings(self) -> None:
         if not self.grok_api_key:
@@ -536,6 +561,7 @@ class GrokSettings(BaseModel):
             openai_model=self.grok_model,
             openai_api_key=self.grok_api_key,
             openai_base_url="http://litellm:4000/v1",
+            openai_enable_json_mode=self.grok_enable_json_mode,
         )
 
 
@@ -556,6 +582,9 @@ class GroqSettings(BaseModel):
     groq_api_key: str | None = Field(
         default=None, description="API key for Groq service"
     )
+    groq_enable_json_mode: bool | None = Field(
+        default=None, description="Enable JSON mode for Groq service"
+    )
 
     def validate_settings(self) -> None:
         if not self.groq_api_key:
@@ -568,6 +597,7 @@ class GroqSettings(BaseModel):
             openai_model=self.groq_model,
             openai_api_key=self.groq_api_key,
             openai_base_url="https://api.groq.com/openai/v1",
+            openai_enable_json_mode=self.groq_enable_json_mode,
         )
 
 
@@ -579,12 +609,10 @@ class QwenMtSettings(BaseModel):
 
     translate_engine_type: Literal["QwenMt"] = Field(default="QwenMt")
     support_llm: Literal["yes", "no"] = Field(
-        default="yes", description="Whether the translator supports LLM"
+        default="no", description="Whether the translator supports LLM"
     )
 
-    qwenmt_model: str = Field(
-        default="qwen-mt-turbo", description="QwenMt model to use"
-    )
+    qwenmt_model: str = Field(default="qwen-mt-plus", description="QwenMt model to use")
     qwenmt_base_url: str | None = Field(
         default="https://dashscope.aliyuncs.com/compatible-mode/v1",
         description="Base URL for QwenMt API",
@@ -598,6 +626,9 @@ class QwenMtSettings(BaseModel):
     )
 
     def validate_settings(self) -> None:
+        logger.warning(
+            "The current QwenMT is not fully adapted and does not support the glossary function at this time."
+        )
         if not self.qwenmt_api_key:
             raise ValueError("QwenMt API key is required")
         self.qwenmt_api_key = _clean_string(self.qwenmt_api_key)
@@ -644,6 +675,9 @@ class OpenAICompatibleSettings(BaseModel):
     )
     openai_compatible_send_reasoning_effort: bool | None = Field(
         default=None, description="Send reasoning effort to OpenAI Compatible service"
+    )
+    openai_compatible_enable_json_mode: bool | None = Field(
+        default=None, description="Enable JSON mode for OpenAI Compatible service"
     )
 
     def validate_settings(self) -> None:
@@ -692,11 +726,84 @@ class OpenAICompatibleSettings(BaseModel):
             openai_reasoning_effort=self.openai_compatible_reasoning_effort,
             openai_send_temprature=self.openai_compatible_send_temperature,
             openai_send_reasoning_effort=self.openai_compatible_send_reasoning_effort,
+            openai_enable_json_mode=self.openai_compatible_enable_json_mode,
         )
 
 
 GUI_PASSWORD_FIELDS.append("openai_compatible_api_key")
 GUI_SENSITIVE_FIELDS.append("openai_compatible_base_url")
+
+
+class AliyunDashScopeSettings(BaseModel):
+    """Aliyun DashScope settings"""
+
+    translate_engine_type: Literal["AliyunDashScope"] = Field(default="AliyunDashScope")
+    support_llm: Literal["yes", "no"] = Field(
+        default="yes", description="Whether the translator supports LLM"
+    )
+
+    aliyun_dashscope_model: str = Field(
+        default="qwen-plus-latest", description="Aliyun DashScope model to use"
+    )
+    aliyun_dashscope_base_url: str | None = Field(
+        default="https://dashscope.aliyuncs.com/compatible-mode/v1",
+        description="Base URL for Aliyun DashScope API",
+    )
+    aliyun_dashscope_api_key: str | None = Field(
+        default=None, description="API key for Aliyun DashScope service"
+    )
+    aliyun_dashscope_timeout: str | None = Field(
+        default="500", description="Timeout (seconds) for Aliyun DashScope service"
+    )
+    aliyun_dashscope_temperature: str | None = Field(
+        default="0.0", description="Temperature for Aliyun DashScope service"
+    )
+    aliyun_dashscope_send_temperature: bool | None = Field(
+        default=None, description="Send temperature to Aliyun DashScope service"
+    )
+    aliyun_dashscope_enable_json_mode: bool | None = Field(
+        default=None, description="Enable JSON mode for Aliyun DashScope service"
+    )
+
+    def validate_settings(self) -> None:
+        if not self.aliyun_dashscope_api_key:
+            raise ValueError("Aliyun DashScope API key is required")
+        if not self.aliyun_dashscope_base_url:
+            raise ValueError("Aliyun DashScope base URL is required")
+        if not self.aliyun_dashscope_model:
+            raise ValueError("Aliyun DashScope model is required")
+        self.aliyun_dashscope_api_key = _clean_string(self.aliyun_dashscope_api_key)
+        self.aliyun_dashscope_base_url = _clean_url(self.aliyun_dashscope_base_url)
+        self.aliyun_dashscope_model = _clean_string(self.aliyun_dashscope_model)
+        self.aliyun_dashscope_timeout = _check_if_positive_float(
+            _clean_string(self.aliyun_dashscope_timeout), field="Timeout"
+        )
+        self.aliyun_dashscope_temperature = _clean_string(
+            self.aliyun_dashscope_temperature
+        )
+        if self.aliyun_dashscope_send_temperature:
+            if not self.aliyun_dashscope_temperature:
+                raise ValueError(
+                    "Temperature is required when send temperature is enabled"
+                )
+            try:
+                float(self.aliyun_dashscope_temperature)
+            except ValueError as e:
+                raise ValueError("Temperature must be a float") from e
+
+    def transform(self) -> OpenAISettings:
+        return OpenAISettings(
+            openai_model=self.aliyun_dashscope_model,
+            openai_api_key=self.aliyun_dashscope_api_key,
+            openai_base_url=self.aliyun_dashscope_base_url,
+            openai_timeout=self.aliyun_dashscope_timeout,
+            openai_temperature=self.aliyun_dashscope_temperature,
+            openai_send_temprature=self.aliyun_dashscope_send_temperature,
+            openai_enable_json_mode=self.aliyun_dashscope_enable_json_mode,
+        )
+
+
+GUI_PASSWORD_FIELDS.append("aliyun_dashscope_api_key")
 
 
 class ClaudeCodeSettings(BaseModel):
@@ -721,6 +828,7 @@ class ClaudeCodeSettings(BaseModel):
 TRANSLATION_ENGINE_SETTING_TYPE: TypeAlias = (
     SiliconFlowFreeSettings
     | OpenAISettings
+    | AliyunDashScopeSettings
     | GoogleSettings
     | BingSettings
     | DeepLSettings
