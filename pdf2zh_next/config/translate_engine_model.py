@@ -458,7 +458,7 @@ class GeminiSettings(BaseModel):
     )
 
     gemini_model: str = Field(
-        default="gemini-2.5-flash", description="Gemini model to use"
+        default="gemini-1.5-flash", description="Gemini model to use"
     )
     gemini_api_key: str | None = Field(
         default=None, description="API key for Gemini service"
@@ -864,8 +864,8 @@ TRANSLATION_ENGINE_SETTING_TYPE: TypeAlias = (
 NOT_SUPPORTED_TRANSLATION_ENGINE_SETTING_TYPE: TypeAlias = NoneType
 
 # 默认翻译引擎
-_DEFAULT_TRANSLATION_ENGINE = GeminiSettings
-assert len(_DEFAULT_TRANSLATION_ENGINE.model_fields) == 5, (
+_DEFAULT_TRANSLATION_ENGINE = GoogleSettings
+assert len(_DEFAULT_TRANSLATION_ENGINE.model_fields) == 2, (
     "Default translation engine cannot have detail settings"
 )
 
